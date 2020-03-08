@@ -200,15 +200,18 @@ class Realtime extends React.Component {
   static displayName = "AggregatorDemo";
 
   state = {
-    time: new Date(2015, 0, 1),
+    // time: new Date(2015, 0, 1),
+    time: new Date(),
     events: new Ring(200),
     percentile50Out: new Ring(100),
     percentile90Out: new Ring(100)
   };
 
   getNewEvent = t => {
-    const base = Math.sin(t.getTime() / 10000000) * 350 + 500;
-    return new TimeEvent(t, parseInt(base + Math.random() * 1000, 10));
+    // const base = Math.sin(t.getTime() / 10000000) * 350 + 500;
+    // return new TimeEvent(t, parseInt(base + Math.random() * 1000, 10));
+    const base = Math.sin(t.getTime() / 10000000) * 1;
+    return new TimeEvent(t, 100);
   };
 
   componentDidMount() {
@@ -307,7 +310,9 @@ class Realtime extends React.Component {
     });
 
     // Timerange for the chart axis
-    const initialBeginTime = new Date(2015, 0, 1);
+    // const initialBeginTime = new Date(2015, 0, 1);
+    const initialBeginTime = new Date(); // Current Date
+
     const timeWindow = 3 * hours;
 
     let beginTime;
@@ -351,7 +356,7 @@ class Realtime extends React.Component {
     ]);
 
     return (
-      <div>
+      <div id='chart'>
         <div className="row">
           <div className="col-md-4">
             <Legend
@@ -360,12 +365,12 @@ class Realtime extends React.Component {
               categories={[
                 {
                   key: "perc50",
-                  label: "50th Percentile",
+                  label: "Regular dB Levels",
                   style: { fill: "#C5DCB7" }
                 },
                 {
                   key: "perc90",
-                  label: "90th Percentile",
+                  label: "Highest dB Levels",
                   style: { fill: "#DFECD7" }
                 }
               ]}
@@ -380,13 +385,13 @@ class Realtime extends React.Component {
           <div className="col-md-12">
             <Resizable>
               <ChartContainer timeRange={timeRange}>
-                <ChartRow height="150">
+                <ChartRow height="250">
                   <YAxis
                     id="y"
-                    label="Value"
+                    label="dB Levels"
                     min={0}
-                    max={1500}
-                    width="70"
+                    max={150} // This changes the y value of graph in terms of dB levels should be 0-200
+                    width="100"
                     type="linear"
                   />
                   {charts}
